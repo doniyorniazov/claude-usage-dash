@@ -41,7 +41,10 @@ final class UsageStore: ObservableObject {
     private func restartTimer() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: refreshIntervalSeconds, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.refresh() }
+            // Strict-concurrency: capture into an immutable so the inner Task
+            // doesn't re-capture the `var self` from the weak-self binding.
+            let store = self
+            Task { @MainActor in store?.refresh() }
         }
     }
 
