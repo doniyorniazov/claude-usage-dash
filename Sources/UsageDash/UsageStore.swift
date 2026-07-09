@@ -17,11 +17,26 @@ final class UsageStore: ObservableObject {
         }
     }
 
+    @Published var notchModeEnabled: Bool {
+        didSet { UserDefaults.standard.set(notchModeEnabled, forKey: "notchModeEnabled") }
+    }
+
+    @Published var notchSize: NotchSize {
+        didSet { UserDefaults.standard.set(notchSize.rawValue, forKey: "notchSize") }
+    }
+
+    @Published var notchShowPlan: Bool {
+        didSet { UserDefaults.standard.set(notchShowPlan, forKey: "notchShowPlan") }
+    }
+
     private var timer: Timer?
 
     init() {
-        let stored = UserDefaults.standard.object(forKey: "refreshIntervalSeconds") as? Double
-        self.refreshIntervalSeconds = stored ?? 300
+        let defaults = UserDefaults.standard
+        self.refreshIntervalSeconds = defaults.object(forKey: "refreshIntervalSeconds") as? Double ?? 300
+        self.notchModeEnabled = defaults.object(forKey: "notchModeEnabled") as? Bool ?? true
+        self.notchSize = NotchSize(rawValue: defaults.string(forKey: "notchSize") ?? "") ?? .standard
+        self.notchShowPlan = defaults.object(forKey: "notchShowPlan") as? Bool ?? false
     }
 
     func start() {

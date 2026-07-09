@@ -5,6 +5,17 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            Section("Notch panel") {
+                Toggle("Show notch drop (notched MacBooks)", isOn: $store.notchModeEnabled)
+                Picker("Drop size", selection: $store.notchSize) {
+                    ForEach(NotchSize.allCases) { size in
+                        Text(size.label).tag(size)
+                    }
+                }
+                .disabled(!store.notchModeEnabled)
+                Toggle("Show plan name", isOn: $store.notchShowPlan)
+                    .disabled(!store.notchModeEnabled)
+            }
             Section("Refresh") {
                 Picker("Probe interval", selection: $store.refreshIntervalSeconds) {
                     Text("1 minute").tag(60.0)
@@ -14,12 +25,12 @@ struct SettingsView: View {
                 }
             }
             Section {
-                Text("Each probe sends a 1-token message to Claude Haiku (≈ $0.00001) and reads the live rate-limit headers Anthropic returns. There is no dedicated read-only endpoint.")
+                Text("Each probe sends a 1-token message to Claude Haiku (≈ $0.00001) and reads the live rate-limit headers Anthropic returns.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
-        .frame(width: 380, height: 220)
+        .frame(width: 420, height: 360)
     }
 }

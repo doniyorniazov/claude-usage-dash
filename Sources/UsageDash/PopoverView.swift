@@ -1,6 +1,18 @@
 import SwiftUI
 
+/// The standard menu-bar popover wrapper.
 struct PopoverView: View {
+    @ObservedObject var store: UsageStore
+
+    var body: some View {
+        PopoverContent(store: store)
+            .padding(16)
+            .frame(width: 320)
+    }
+}
+
+/// Body content reused by both the menu-bar popover and the notch panel.
+struct PopoverContent: View {
     @ObservedObject var store: UsageStore
     @Environment(\.openSettings) private var openSettings
 
@@ -28,8 +40,6 @@ struct PopoverView: View {
             Divider()
             footer
         }
-        .padding(16)
-        .frame(width: 320)
     }
 
     private var header: some View {
@@ -98,7 +108,6 @@ struct PopoverView: View {
         // so the warning still reads at a glance.
         pct >= 1.0 ? .red : .claudeOrange
     }
-
 }
 
 extension Color {

@@ -6,6 +6,24 @@ enum Fmt {
         String(format: "%.0f%%", p * 100)
     }
 
+    /// Date -> "5:30PM" — local clock time, no space before AM/PM.
+    static func clockTime(_ date: Date?) -> String {
+        guard let date = date else { return "—" }
+        let f = DateFormatter()
+        f.dateFormat = "h:mma"
+        f.amSymbol = "AM"
+        f.pmSymbol = "PM"
+        return f.string(from: date)
+    }
+
+    /// Date -> "Tue, Jun 2" — short weekday + month + day.
+    static func weekdayDate(_ date: Date?) -> String {
+        guard let date = date else { return "—" }
+        let f = DateFormatter()
+        f.dateFormat = "EEE, MMM d"
+        return f.string(from: date)
+    }
+
     /// Date -> "2h 14m", "3d 4h", "in 12m"
     static func timeUntil(_ date: Date?) -> String {
         guard let date = date else { return "—" }
