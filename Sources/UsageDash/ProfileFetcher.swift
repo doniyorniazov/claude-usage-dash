@@ -10,7 +10,7 @@ struct PlanInfo: Equatable {
 /// what plan the user is on. Plan info changes rarely — fetch once at launch.
 enum ProfileFetcher {
     static func fetch() async throws -> PlanInfo {
-        let creds = try Keychain.loadClaudeCredentials()
+        let creds = try CredentialsCache.current()
 
         var req = URLRequest(url: URL(string: "https://api.anthropic.com/api/oauth/profile")!)
         req.setValue("Bearer \(creds.accessToken)", forHTTPHeaderField: "authorization")

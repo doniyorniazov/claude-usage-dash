@@ -20,8 +20,11 @@ enum ProbeError: Error, LocalizedError {
 enum UsageProbe {
     static func fetch() async throws -> LimitState {
         let creds: ClaudeCredentials
-        do { creds = try Keychain.loadClaudeCredentials() }
+        do { creds = try CredentialsCache.current() }
         catch { throw ProbeError.notAuthenticated((error as? LocalizedError)?.errorDescription ?? "Keychain read failed") }
+        if creds.isExpired {
+            throw ProbeError.notAuthenticated("Claude Code token expired. Run `claude` to refresh it.")
+        }
 
         var req = URLRequest(url: URL(string: "https://api.anthropic.com/v1/messages")!)
         req.httpMethod = "POST"
